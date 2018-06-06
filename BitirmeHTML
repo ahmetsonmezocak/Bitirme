@@ -1,0 +1,152 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="WebApplication1.WebForm1" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Bitirme Projesi</title>
+
+    <meta name="description" content=""/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css"/>
+        <!--<link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">-->
+
+
+        <!--For Plugins external css-->
+        <link rel="stylesheet" href="assets/css/plugins.css" />
+
+        <link rel="stylesheet" href="assets/css/raleway-webfont.css" />
+
+        <!--Theme custom css -->
+        <link rel="stylesheet" href="assets/css/style.css"/>
+
+        <!--Theme Responsive css-->
+        <link rel="stylesheet" href="assets/css/responsive.css" />
+
+        <script src="assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+
+</head>
+<body>
+  <form id="form1" runat="server">
+    <div>
+
+      <asp:Panel ID="Panel3" runat="server">
+        <section id="our-skills" class=" skills skill-bg">
+          <div class="overlay-img">
+            <div class="container sections text-center">
+              <div class="skill-heading">
+
+                <h4>YETENEKLERİNİZ</h4>
+
+              </div>
+
+              <!-- Example row of columns -->
+              <div class="row">
+                <asp:Panel ID="Panel2" runat="server">
+                
+                  <%--<div class='col-sm-3 text-center'>
+								    <div class="main-skill">
+									    <div class="chart-round">
+										    <div class="chart" data-percent="86">
+											    <span class="percent"></span>
+										    </div>
+									    </div>
+									    <div class="skills-text">Marketing</div>
+								    </div>
+                  </div>
+							
+              <div class="col-sm-3 text-center">
+								<div class="main-skill">
+									<div class="chart-round">
+										<div class="chart" data-percent="86">
+											<span class="percent"></span>
+										</div>
+									</div>
+									<div class="skills-text">Marketing</div>
+								</div>
+              </div>
+							
+              <div class="col-sm-3 text-center">
+								<div class="main-skill">
+									<div class="chart-round">
+										<div class="chart" data-percent="40">
+											<span class="percent"></span>
+										</div>
+									</div>
+									<div class="skills-text">Marketing</div>
+								</div>
+              </div>
+							
+              <div class="col-sm-3 text-center">
+								<div class="main-skill">
+									<div class="chart-round">
+										<div class="chart" data-percent="86">
+											<span class="percent"></span>
+										</div>
+									</div>
+									<div class="skills-text">Marketing</div>
+								</div>
+              </div>--%>
+            </asp:Panel>
+
+          </div> 
+
+         </div>
+        </div> <!-- /container -->  
+      </div>		
+    </section>
+  </asp:Panel>
+            
+
+            
+            <header id="home" class="home">
+            <div class="overlay-img">
+                <div class="container">
+
+                    <div class="row">
+                        <h4><asp:Label ID="Label6" style="color:red; margin-left:37%;" runat="server" Text=""></asp:Label></h4>
+                        <div class="col-md-12">
+                            <div class="home-content">
+                                <asp:Panel ID="Panel4" runat="server">
+                                    <h5>İŞTE YETENEĞİN</h5>
+                                    <h1>PROJEMİZİN AMACI <span>SAYISAL ZEKA</span> ÜZERİNE BİR TEST UYGULAYARAK <span>YETENEKLERİNİZİ</span> BELİRLEMEKTİR</h1>
+                                </asp:Panel>
+
+                                <asp:Panel ID="Panel5" runat="server"></asp:Panel>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>	
+        </header>
+            
+    <script src="assets/js/vendor/jquery-1.11.2.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.min.js"></script>
+    <script src="assets/js/jquery.easypiechart.min.js"></script>
+    <script src="assets/js/plugins.js"></script>
+    <script src="assets/js/modernizr.js"></script>
+    <script src="assets/js/main.js"></script>
+
+
+            <ul style="list-style-type:none">
+                <asp:Panel ID="Panel1" runat="server" style="margin-left:5%; margin-top:5%; margin-right:5%;">
+                <%--<asp:Repeater ID="r1" runat="server">
+                    <ItemTemplate>
+                        <li><%# Eval("soruMetni") %></li>--%>
+                        <%--<li><%# Eval("cevapMetni") %></li>--%>
+                    <%--</ItemTemplate>
+                </asp:Repeater>--%>
+                </asp:Panel>     
+            </ul>
+
+            <asp:Button ID="buton" runat="server" Text="TAMAMLA" class="btn btn-default btn-home" style="margin-bottom:5%; margin-left:5%;" OnClick="Unnamed1_Click" />
+
+        </div>
+    </form>
+</body>
+</html>
