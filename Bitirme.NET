@@ -51,7 +51,7 @@ namespace WebApplication1
                 dr = cmd.ExecuteReader();
                 while (dr.Read())
                     rbl.Items.Add(dr["cevapMetni"].ToString());
-                rbl.SelectedIndex = 0;
+                //rbl.SelectedIndex = 0;
                 rbllist.Add(rbl);
                 dr.Close();
             }
