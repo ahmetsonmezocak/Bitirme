@@ -1,0 +1,170 @@
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace WebApplication1
+{
+    public partial class WebForm1 : System.Web.UI.Page
+    {
+        SqlConnection con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database1.mdf;Integrated Security=True");
+        SqlCommand cmd;
+        SqlDataReader dr;
+        List<int> indis = new List<int>();
+        List<RadioButtonList> rbllist = new List<RadioButtonList>();
+        List<int> mId = new List<int>();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Panel3.Visible = false;
+            con.Open();
+
+            cmd = new SqlCommand("SELECT Id FROM soru", con);
+            dr = cmd.ExecuteReader();
+            while (dr.Read())
+                indis.Add(Convert.ToInt32(dr["Id"]));
+            dr.Close();
+
+            for(int i=0; i<indis.Count; i++)
+            {
+                cmd = new SqlCommand("SELECT soruMetni FROM soru WHERE Id = " + indis[i] + "", con);
+                dr = cmd.ExecuteReader();
+                while (dr.Read()) {
+                    Literal lt = new Literal();
+                    lt.ID = "lt" + i.ToString();
+                    Panel1.Controls.Add(lt);
+                    
+                    lt.Text = "</br></br><li><h3>" +dr["soruMetni"].ToString()+ "<h3></li>";
+                }
+                dr.Close();
+
+                RadioButtonList rbl = new RadioButtonList();
+                rbl.ID = "rbl" + i.ToString();
+                rbl.EnableViewState = false;
+                Panel1.Controls.Add(rbl);
+
+                cmd = new SqlCommand("SELECT cevapMetni FROM cevap WHERE soruId="+indis[i]+"", con);
+                dr = cmd.ExecuteReader();
+                while (dr.Read())
+                    rbl.Items.Add(dr["cevapMetni"].ToString());
+                rbl.SelectedIndex = 0;
+                rbllist.Add(rbl);
+                dr.Close();
+            }
+            indis.Clear();
+            con.Close(); 
+        }
+
+        protected void Unnamed1_Click(object sender, EventArgs e)
+        {
+            con.Open();
+            try
+            {
+                Label6.Text = "";
+                cmd = new SqlCommand("SELECT COUNT(Id) FROM ozellikler", con);
+                int deger2 = Convert.ToInt32(cmd.ExecuteScalar());
+                int[,] ozid = new int[deger2, 2];
+
+                int id = 0;
+                cmd = new SqlCommand("SELECT Id FROM ozellikler", con);
+                dr = cmd.ExecuteReader();
+                while (dr.Read()) {
+                    ozid[id, 0] = Convert.ToInt32(dr["Id"]);
+                    ozid[id, 1] = 0;
+                    id++;
+                }
+                dr.Close();
+
+                foreach (RadioButtonList sonuc in rbllist) {
+                    string sql = @"SELECT ozellikId FROM cevap WHERE cevapMetni=@secili";
+
+                    cmd = new SqlCommand(sql, con);
+                    cmd.Parameters.AddWithValue("@secili", sonuc.SelectedItem.Text);
+
+                    //con.Open();
+                    dr = cmd.ExecuteReader();
+                    int deger = 0;
+                    while (dr.Read()) {
+                        deger = Convert.ToInt32(dr["ozellikId"]);
+                        for (int i = 0; i < deger2; i++)
+                            if (ozid[i, 0] == deger) {
+                                ozid[i, 1]++;
+                                break;
+                            }
+                    }
+                    dr.Close();
+                    //con.Close();
+                }
+
+                for (int i = 0; i < deger2; i++)
+                {
+                    cmd = new SqlCommand("SELECT COUNT(Id) FROM cevap WHERE ozellikId="+ozid[i,0], con);
+                    int x = Convert.ToInt32(cmd.ExecuteScalar());
+                    //Label6.Text += " " + ozid[i, 1] + " " + x;
+                    ozid[i, 1] = ozid[i, 1] * 100 / x; /*rbllist.Count;*/
+                    if (ozid[i, 1] > 100)
+                        ozid[i, 1] = 100;
+                }
+
+                Panel3.Visible = true;
+                Panel4.Visible = false;
+                int m = 0;
+                cmd = new SqlCommand("SELECT ozellikMetni FROM ozellikler", con);
+                dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Literal lt = new Literal();
+                    lt.ID = "lto" + m.ToString();
+                    Panel2.Controls.Add(lt);
+
+                    lt.Text = "<div class='col - sm - 3 text - center'><div class='main-skill'><div class='chart-round'><div class='chart' data-percent=" + ozid[m++, 1] + "><span class='percent'></span></div></div><div class='skills-text'>" + dr["ozellikMetni"].ToString() + "</div></div></div>";
+                }
+                dr.Close();
+
+                for (int x = 0; x < deger2; x++) {
+                    int buyuk = ozid[0, 1];
+                    for (int y = 1; y < deger2; y++)
+                        if (ozid[y, 1] >= buyuk)
+                            buyuk = ozid[y, 1];
+
+                    if ((float)buyuk >= (float)(100 / deger2)) {
+                        for (int z = 0; z < deger2; z++)
+                            if (ozid[z, 1] == buyuk) {
+                                ozid[z, 1] = 0;
+                                mId.Add(ozid[z, 0]);
+                                break;
+                            }
+                    }
+                    else
+                        break;
+                }
+
+                for (int i = 0; i < mId.Count/2; i++) {
+                    string sql = @"SELECT meslek FROM meslekler WHERE ozellikId = @secili";
+                    cmd = new SqlCommand(sql, con);
+                    cmd.Parameters.AddWithValue("@secili", mId[i]);
+
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read()) {
+                        Literal lt = new Literal();
+                        lt.ID = "lto" + m.ToString();
+                        Panel5.Controls.Add(lt);
+
+                        lt.Text = "</br><h3>"+dr["meslek"].ToString()+"</h3>";
+                    }
+                    dr.Close();
+                }   
+            }
+            
+            catch
+            {
+                Label6.Text = "Lütfen Tüm Soruları Çözün";
+            }
+            con.Close();
+        }
+    }
+}
